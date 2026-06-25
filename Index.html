@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bayesova Kalkulačka</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --border: #e2e8f0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        h1 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            text-align: center;
+            color: var(--primary);
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+        .hint {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        button {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:active {
+            background-color: #1d4ed8;
+        }
+        .result-box {
+            display: none;
+            margin-top: 24px;
+            padding: 16px;
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+        }
+        .result-box h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.2rem;
+            color: #1e3a8a;
+        }
+        .result-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 10px;
+            border: 1px solid #93c5fd;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            resize: none;
+            box-sizing: border-box;
+        }
+        .copy-btn {
+            background-color: #475569;
+            margin-top: 8px;
+            padding: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Bayesova kalkulačka</h1>
+
+    <div class="form-group">
+        <label>Hypotéza / Příčina (A)</label>
+        <input type="text" id="hypothesys" placeholder="např. Trh čeká recese" value="Zkoumaný jev">
+    </div>
+
+    <div class="form-group">
+        <label>Pozorovaný důkaz (B)</label>
+        <input type="text" id="evidence" placeholder="např. Inverzní výnosová křivka" value="Událost, která se stala">
+    </div>
+
+    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;">
+
+    <div class="form-group">
+        <label>Apriorní pravděpodobnost P(A) v %</label>
+        <input type="number" id="pA" placeholder="0 - 100" min="0" max="100" step="0.01">
+        <div class="hint">Jak pravděpodobná byla hypotéza PŘED událostí?</div>
+    </div>
+
+    <div class="form-group">
+        <label>Pravděpodobnost shody P(B|A) v %</label>
+        <input type="number" id="pBA" placeholder="0 - 100" min="0" max="100" step="0.01">
+        <div class="hint">Jaká je šance, že důkaz nastane, pokud hypotéza PLATÍ?</div>
+    </div>
+
+    <div class="form-group">
+        <label>Falešný poplach P(B|ne-A) v %</label>
+        <input type="number" id="pBnotA" placeholder="0 - 100" min="0" max="100" step="0.01">
+        <div class="hint">Jaká je šance, že důkaz nastane, i když hypotéza NEPLATÍ?</div>
+    </div>
+
+    <button onclick="calculateBayes()">Spočítat pravděpodobnost</button>
+
+    <div class="result-box" id="resultBox">
+        <h2>Aposteriorní pravděpodobnost</h2>
+        <div class="hint" style="text-align: center; margin-bottom: 4px;">P(A|B) - Pravděpodobnost hypotézy po zohlednění důkazu:</div>
+        <div class="result-value" id="finalResult">0.00 %</div>
+        
+        <label>Shrnutí pro AI:</label>
+        <textarea id="aiSummary" readonly></textarea>
+        <button class="copy-btn" onclick="copyToClipboard()">Kopírovat pro AI</button>
+    </div>
+</div>
+
+<script>
+    function calculateBayes() {
+        // Získání hodnot z polí
+        const nameA = document.getElementById('hypothesys').value || "Nezadáno";
+        const nameB = document.getElementById('evidence').value || "Nezadáno";
+        
+        let pA = parseFloat(document.getElementById('pA').value);
+        let pBA = parseFloat(document.getElementById('pBA').value);
+        let pBnotA = parseFloat(document.getElementById('pBnotA').value);
+
+        // Validace
+        if (isNaN(pA) || isNaN(pBA) || isNaN(pBnotA)) {
+            alert("Prosím, vyplňte všechna číselná pole (0-100).");
+            return;
+        }
+
+        // Převod procent na desetinná čísla
+        pA = pA / 100;
+        pBA = pBA / 100;
+        pBnotA = pBnotA / 100;
+
+        // Výpočet Bayesovy věty
+        const pNotA = 1 - pA;
+        const pB = (pBA * pA) + (pBnotA * pNotA); // Celková pravděpodobnost jevu B
+        
+        let pAB = 0;
+        if (pB > 0) {
+            pAB = (pBA * pA) / pB;
+        }
+
+        const resultPercent = (pAB * 100).toFixed(2);
+
+        // Zobrazení výsledku
+        document.getElementById('finalResult').innerText = resultPercent + ' %';
+        document.getElementById('resultBox').style.display = 'block';
+
+        // Sestavení textu pro AI
+        const summaryText = `[BAYESIAN ANALYSIS REPORT]
+Hypothesis (A): ${nameA}
+Evidence (B): ${nameB}
+
+Parameters:
+- Prior Probability P(A): ${(pA * 100).toFixed(2)}%
+- Likelihood / True Positive P(B|A): ${(pBA * 100).toFixed(2)}%
+- False Positive P(B|¬A): ${(pBnotA * 100).toFixed(2)}%
+
+Result:
+- Posterior Probability P(A|B): ${resultPercent}%
+
+Please use this calculated posterior probability in our further discussion.`;
+
+        document.getElementById('aiSummary').value = summaryText;
+        
+        // Plynulé posunutí na výsledek (mobilní přívětivost)
+        document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function copyToClipboard() {
+        const copyText = document.getElementById("aiSummary");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // Pro mobilní zařízení
+        navigator.clipboard.writeText(copyText.value).then(() => {
+            const btn = document.querySelector('.copy-btn');
+            const originalText = btn.innerText;
+            btn.innerText = "Zkopírováno!";
+            btn.style.backgroundColor = "#16a34a";
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.backgroundColor = "#475569";
+            }, 2000);
+        });
+    }
+</script>
+
+</body>
+</html>
