@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bayesova Kalkulačka - Magenta Neon</title>
+    <title>Bayesova Kalkulačka - Cyberpunk Edition</title>
     <style>
         :root {
-            --bg-color: #0b0212; /* Velmi tmavá fialová pro pozadí */
-            --neon-purple: #9d00ff;
-            --neon-magenta: #e024c3;
-            --neon-pink: #ff00aa;
-            --text-color: #fce8ff;
-            --input-bg: #15051f;
-            --success-color: #df58ff; /* Růžovo-fialová pro úspěšné akce */
+            --bg-color: #080112; /* Temně fialová */
+            --frame-purple: #3a0ca3;
+            --neon-pink: #f72585; /* Zářivě růžová */
+            --neon-green: #00ff66; /* Neonově zelená pro akce a výsledky */
+            --text-color: #fdf0f6;
+            --input-bg: #140524;
         }
 
         * {
@@ -31,55 +30,55 @@
             min-height: 100vh;
         }
 
-        /* Celý ohraničený obdélník ve stylu fialového neonu */
+        /* Celý ohraničený obdélník */
         .calc-frame {
             width: 100%;
             max-width: 480px;
-            background: rgba(18, 4, 28, 0.85);
-            border: 3px solid var(--neon-purple);
+            background: rgba(20, 5, 36, 0.9);
+            border: 2px solid var(--neon-pink);
             border-radius: 16px;
             padding: 24px;
-            box-shadow: 0 0 15px var(--neon-purple), 
-                        inset 0 0 15px var(--neon-purple);
+            box-shadow: 0 0 15px rgba(247, 37, 133, 0.6), 
+                        inset 0 0 10px rgba(247, 37, 133, 0.3);
             margin: 10px auto;
         }
 
         h1 {
             font-size: 1.6rem;
             text-align: center;
-            color: var(--neon-magenta);
+            color: var(--neon-pink);
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-top: 0;
             margin-bottom: 20px;
-            text-shadow: 0 0 10px var(--neon-magenta);
+            text-shadow: 0 0 10px var(--neon-pink);
         }
 
         .info-badge {
             display: none;
-            border: 1px solid var(--success-color);
-            background: rgba(223, 88, 255, 0.1);
-            color: var(--success-color);
+            border: 1px solid var(--neon-green);
+            background: rgba(0, 255, 102, 0.1);
+            color: var(--neon-green);
             padding: 10px;
             border-radius: 6px;
             font-size: 0.8rem;
             margin-bottom: 20px;
             text-align: center;
-            text-shadow: 0 0 4px var(--success-color);
-            box-shadow: 0 0 8px rgba(223, 88, 255, 0.2);
+            text-shadow: 0 0 4px var(--neon-green);
+            box-shadow: 0 0 8px rgba(0, 255, 102, 0.2);
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 22px;
         }
 
         label {
             display: block;
             font-weight: bold;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             font-size: 0.85rem;
-            color: var(--neon-magenta);
-            text-shadow: 0 0 3px rgba(224, 36, 195, 0.5);
+            color: var(--neon-pink);
+            text-shadow: 0 0 2px var(--neon-pink);
         }
 
         input[type="text"],
@@ -87,24 +86,72 @@
         textarea {
             width: 100%;
             background-color: var(--input-bg);
-            border: 2px solid var(--neon-purple);
+            border: 2px solid var(--frame-purple);
             border-radius: 8px;
             padding: 12px;
             color: #fff;
-            font-size: 0.95rem;
+            font-size: 1rem;
             outline: none;
-            box-shadow: 0 0 5px rgba(157, 0, 255, 0.2);
             transition: all 0.3s ease;
+        }
+
+        /* Skrytí šipek (spinners) v číselných polích */
+        input[type="number"]::-webkit-inner-spin-button, 
+        input[type="number"]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type="number"] {
+            -moz-appearance: textfield; /* Pro Firefox */
         }
 
         input:focus, textarea:focus {
             border-color: var(--neon-pink);
+            box-shadow: 0 0 10px rgba(247, 37, 133, 0.5);
+        }
+
+        /* Stylování šoupátek (sliders) */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+            margin-top: 12px;
+        }
+        
+        input[type="range"]:focus {
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: var(--frame-purple);
+            border-radius: 3px;
+            box-shadow: 0 0 5px var(--frame-purple);
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            height: 22px;
+            width: 22px;
+            border-radius: 50%;
+            background: var(--neon-pink);
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -8px;
             box-shadow: 0 0 12px var(--neon-pink);
+            transition: transform 0.1s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:active {
+            transform: scale(1.2);
+            background: var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
         }
 
         .hint {
             font-size: 0.75rem;
-            color: #a88bb8;
+            color: #9c82b0;
             margin-top: 4px;
         }
 
@@ -112,23 +159,23 @@
         .btn-calc {
             width: 100%;
             background: transparent;
-            border: 2px solid var(--neon-pink);
-            color: var(--neon-pink);
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
             padding: 15px;
             border-radius: 8px;
             font-size: 1.1rem;
             font-weight: bold;
             text-transform: uppercase;
             cursor: pointer;
-            margin-top: 10px;
-            text-shadow: 0 0 5px var(--neon-pink);
-            box-shadow: 0 0 12px rgba(255, 0, 170, 0.3), inset 0 0 5px rgba(255, 0, 170, 0.2);
+            margin-top: 5px;
+            text-shadow: 0 0 5px var(--neon-green);
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.2), inset 0 0 5px rgba(0, 255, 102, 0.1);
             transition: all 0.2s ease;
         }
 
         .btn-calc:active {
-            background: rgba(255, 0, 170, 0.2);
-            box-shadow: 0 0 20px var(--neon-pink);
+            background: rgba(0, 255, 102, 0.2);
+            box-shadow: 0 0 20px var(--neon-green);
         }
 
         /* Výsledkový box */
@@ -136,10 +183,10 @@
             display: none;
             margin-top: 25px;
             padding: 18px;
-            border: 2px solid var(--neon-magenta);
-            background: rgba(224, 36, 195, 0.05);
+            border: 2px solid var(--neon-green);
+            background: rgba(0, 255, 102, 0.05);
             border-radius: 10px;
-            box-shadow: 0 0 12px var(--neon-magenta), inset 0 0 6px var(--neon-magenta);
+            box-shadow: 0 0 12px rgba(0, 255, 102, 0.3), inset 0 0 6px rgba(0, 255, 102, 0.1);
         }
 
         .result-box h2 {
@@ -151,27 +198,26 @@
         }
 
         .result-value {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: bold;
-            color: var(--text-color);
+            color: var(--neon-green);
             text-align: center;
             margin-bottom: 15px;
-            text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-magenta);
+            text-shadow: 0 0 15px var(--neon-green);
         }
 
         textarea {
             height: 120px;
             font-size: 0.8rem;
             resize: none;
-            border-color: var(--neon-purple);
+            border-color: var(--frame-purple);
         }
 
-        /* Tlačítko pro kopírování */
         .btn-copy {
             width: 100%;
             background: transparent;
-            border: 2px solid #e0b0ff;
-            color: #e0b0ff;
+            border: 1px solid #a88bb8;
+            color: #a88bb8;
             padding: 10px;
             border-radius: 6px;
             font-size: 0.9rem;
@@ -181,13 +227,14 @@
         }
 
         .btn-copy:active {
-            background: rgba(224, 176, 255, 0.2);
+            background: rgba(247, 37, 133, 0.2);
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
         }
 
-        /* Styl pro automaticky vyplněná pole z DB */
         .auto-filled {
-            border-color: var(--success-color) !important;
-            box-shadow: 0 0 8px rgba(223, 88, 255, 0.4) !important;
+            border-color: var(--neon-green) !important;
+            box-shadow: 0 0 8px rgba(0, 255, 102, 0.4) !important;
         }
     </style>
 </head>
@@ -201,9 +248,7 @@
     <div class="form-group">
         <label>Hypotéza / Příčina (A)</label>
         <input type="text" id="hypothesys" list="scenarios" placeholder="Vyberte scénář nebo pište...">
-        <datalist id="scenarios">
-            </datalist>
-        <div class="hint">Klikněte pro načtení scénářů z vaší databáze.</div>
+        <datalist id="scenarios"></datalist>
     </div>
 
     <div class="form-group">
@@ -213,17 +258,20 @@
 
     <div class="form-group">
         <label>Apriorní pravděpodobnost P(A) v %</label>
-        <input type="number" id="pA" placeholder="0.00" min="0" max="100" step="0.00001">
+        <input type="number" id="pA" placeholder="0" min="0" max="100" step="any">
+        <input type="range" id="pA_range" min="0" max="100" step="1" value="0">
     </div>
 
     <div class="form-group">
         <label>Pravděpodobnost shody P(B|A) v %</label>
-        <input type="number" id="pBA" placeholder="0.00" min="0" max="100" step="0.00001">
+        <input type="number" id="pBA" placeholder="0" min="0" max="100" step="any">
+        <input type="range" id="pBA_range" min="0" max="100" step="1" value="0">
     </div>
 
     <div class="form-group">
         <label>Falešný poplach P(B|ne-A) v %</label>
-        <input type="number" id="pBnotA" placeholder="0.00" min="0" max="100" step="0.00001">
+        <input type="number" id="pBnotA" placeholder="0" min="0" max="100" step="any">
+        <input type="range" id="pBnotA_range" min="0" max="100" step="1" value="0">
     </div>
 
     <button class="btn-calc" onclick="calculateBayes()">Spočítat pravděpodobnost</button>
@@ -244,15 +292,36 @@
     // ---------------------------------------------------------
     const sheetUrl = "VLOŽTE_VÁŠ_ZKOPIROVANÝ_ODKAZ_ZDE"; 
     
-    // Prázdná databáze, která se naplní z tabulky
     let db = {}; 
+
+    // Synchronizace ručních inputů a šoupátek
+    const syncInputs = () => {
+        ['pA', 'pBA', 'pBnotA'].forEach(id => {
+            const numInput = document.getElementById(id);
+            const rangeInput = document.getElementById(id + '_range');
+
+            // Změna v číselném poli posune šoupátko
+            numInput.addEventListener('input', () => {
+                if(numInput.value !== '') {
+                    rangeInput.value = numInput.value;
+                    calculateBayes();
+                }
+            });
+
+            // Změna na šoupátku přepíše číslo
+            rangeInput.addEventListener('input', () => {
+                numInput.value = rangeInput.value;
+                calculateBayes();
+            });
+        });
+    };
+    syncInputs();
 
     // Načtení dat při startu aplikace
     async function loadDataFromGoogleSheet() {
-        // Pokud URL není nastavena, vyhneme se chybě a necháme prázdnou databázi
         if(sheetUrl === "VLOŽTE_VÁŠ_ZKOPIROVANÝ_ODKAZ_ZDE") {
             const badge = document.getElementById('infoBadge');
-            badge.innerText = "⚠ Google Tabulka není napojena (Zkontrolujte kód)";
+            badge.innerText = "⚠ Google Tabulka není napojena";
             badge.style.display = 'block';
             badge.style.borderColor = "var(--neon-pink)";
             badge.style.color = "var(--neon-pink)";
@@ -268,7 +337,6 @@
             datalist.innerHTML = ''; 
             db = {}; 
 
-            // Přeskakujeme hlavičku v tabulce (i = 1)
             for (let i = 1; i < rows.length; i++) {
                 const cols = rows[i].split('\t'); 
                 
@@ -289,18 +357,11 @@
                     datalist.appendChild(option);
                 }
             }
-            console.log("Databáze úspěšně načtena!");
         } catch (error) {
             console.error("Chyba při načítání:", error);
-            const badge = document.getElementById('infoBadge');
-            badge.innerText = "⚠ Nepodařilo se stáhnout data z tabulky";
-            badge.style.display = 'block';
-            badge.style.borderColor = "var(--neon-pink)";
-            badge.style.color = "var(--neon-pink)";
         }
     }
 
-    // Spustí se hned po načtení stránky
     window.onload = loadDataFromGoogleSheet;
 
     // Sledování změn v políčku hypotézy
@@ -310,26 +371,30 @@
         const fields = ['hypothesys', 'evidence', 'pA', 'pBA', 'pBnotA'];
         
         if (db[key]) {
-            // Vyplnění hodnot z tabulky
             document.getElementById('hypothesys').value = db[key].hypothesys;
             document.getElementById('evidence').value = db[key].evidence;
+            
+            // Vyplnění čísel
             document.getElementById('pA').value = db[key].pA;
             document.getElementById('pBA').value = db[key].pBA;
             document.getElementById('pBnotA').value = db[key].pBnotA;
+            
+            // Vyplnění šoupátek
+            document.getElementById('pA_range').value = db[key].pA;
+            document.getElementById('pBA_range').value = db[key].pBA;
+            document.getElementById('pBnotA_range').value = db[key].pBnotA;
 
             fields.forEach(f => document.getElementById(f).classList.add('auto-filled'));
             
             const badge = document.getElementById('infoBadge');
-            badge.innerText = "✓ Scénář načten z tabulky";
-            badge.style.borderColor = "var(--success-color)";
-            badge.style.color = "var(--success-color)";
+            badge.innerText = "✓ Scénář načten";
+            badge.style.borderColor = "var(--neon-green)";
+            badge.style.color = "var(--neon-green)";
             badge.style.display = 'block';
             
             setTimeout(() => { badge.style.display = 'none'; }, 2000);
 
-            // OPRAVA CHYBY: Automaticky spustíme výpočet hned po načtení scénáře!
             calculateBayes();
-
         } else {
             fields.forEach(f => document.getElementById(f).classList.remove('auto-filled'));
         }
@@ -345,12 +410,9 @@
         let pBnotA = parseFloat(document.getElementById('pBnotA').value);
 
         if (isNaN(pA) || isNaN(pBA) || isNaN(pBnotA)) {
-            // Skryjeme výsledek, pokud nejsou vyplněna čísla
-            document.getElementById('resultBox').style.display = 'none';
             return; 
         }
 
-        // Převod na desetinná čísla
         pA = pA / 100;
         pBA = pBA / 100;
         pBnotA = pBnotA / 100;
@@ -363,19 +425,18 @@
             pAB = (pBA * pA) / pB;
         }
 
-        const resultPercent = (pAB * 100).toFixed(4);
+        // Změna formátování na 2 desetinná místa dle požadavku
+        const resultPercent = (pAB * 100).toFixed(2);
 
-        // Zobrazení výsledku
-        document.getElementById('finalResult').innerText = parseFloat(resultPercent) + ' %';
+        document.getElementById('finalResult').innerText = resultPercent + ' %';
         document.getElementById('resultBox').style.display = 'block';
 
-        // Vygenerování aktuálního textu pro AI
-        const summaryText = `[BAYESIAN ANALYSIS REPORT]\nHypothesis (A): ${nameA}\nEvidence (B): ${nameB}\n\nParameters:\n- Prior Probability P(A): ${(pA * 100).toString()}%\n- Likelihood / True Positive P(B|A): ${(pBA * 100).toString()}%\n- False Positive P(B|¬A): ${(pBnotA * 100).toString()}%\n\nResult:\n- Posterior Probability P(A|B): ${resultPercent}%\n\nPlease use this calculated posterior probability in our further discussion.`;
+        const summaryText = `[BAYESIAN ANALYSIS REPORT]\nHypothesis (A): ${nameA}\nEvidence (B): ${nameB}\n\nParameters:\n- Prior Probability P(A): ${document.getElementById('pA').value}%\n- Likelihood / True Positive P(B|A): ${document.getElementById('pBA').value}%\n- False Positive P(B|¬A): ${document.getElementById('pBnotA').value}%\n\nResult:\n- Posterior Probability P(A|B): ${resultPercent}%\n\nPlease use this calculated posterior probability in our further discussion.`;
 
         document.getElementById('aiSummary').value = summaryText;
     }
 
-    // Kopírování do schránky s neonovým efektem
+    // Kopírování do schránky
     function copyToClipboard() {
         const copyText = document.getElementById("aiSummary");
         copyText.select();
@@ -383,14 +444,12 @@
         navigator.clipboard.writeText(copyText.value).then(() => {
             const btn = document.getElementById('copyBtn');
             btn.innerText = "Zkopírováno!";
-            btn.style.borderColor = "var(--success-color)";
-            btn.style.color = "var(--success-color)";
-            btn.style.boxShadow = "0 0 10px rgba(223, 88, 255, 0.5)";
+            btn.style.borderColor = "var(--neon-green)";
+            btn.style.color = "var(--neon-green)";
             setTimeout(() => {
                 btn.innerText = "Kopírovat pro AI";
-                btn.style.borderColor = "#e0b0ff";
-                btn.style.color = "#e0b0ff";
-                btn.style.boxShadow = "none";
+                btn.style.borderColor = "#a88bb8";
+                btn.style.color = "#a88bb8";
             }, 2000);
         });
     }
